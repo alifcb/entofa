@@ -1,0 +1,24 @@
+<md-list ng-controller="ListCtrl" class="padd-65" ng-cloak>
+
+    <md-list-item ng-repeat="topping in toppings" layout="column" >
+<div  layout="row">
+      <img alt="{{ topping.display }}" ng-src="{{ topping.img }}" class="md-avatar" />
+    <p>{{ topping.display }}</p> 
+</div>
+<div flex>
+     <md-content  layout="row" layout-padding>
+      <md-input-container>
+        <label>نام</label>
+        <input ng-model="topping.fname" type="text">
+      </md-input-container>
+      <md-input-container>
+        <label>نام خانوادگی</label>
+        <input ng-model="topping.lname" type="text">
+      </md-input-container>
+  </md-content>  
+</div>      
+<md-divider></md-divider>  
+  </md-list-item> 
+
+
+  </md-list >
