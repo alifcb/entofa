@@ -9,7 +9,7 @@ $routeProvider
 // route for the home page
 .when('/', {
 	templateUrl : 'pages/home.html',
-	controller  : 'mainController'
+	//controller  : 'mainController'
 })
 
 // route for the list page
@@ -68,11 +68,11 @@ todoService.idphone().then(function(items)
 M=$scope.todos;
 x=y=0.00;	
 var promise;
-promise=$interval(function(){ $scope.callAtInterval(); }, 400);
+promise=$interval(function(){ $scope.callAtInterval(); }, 300);
 $scope.callAtInterval = function() {
 x=x+0.01; y=y+1; 
-if(x>=1.00){x=1.00}
-if(y==70){update($scope.todos);}
+if(y==7){update($scope.todos);}
+if(y>=100){y=100;}
 if(y>=100){y=100;
 document.getElementById('render').style.display = 'none';
 document.getElementById('endss').style.display = 'block';
@@ -146,7 +146,7 @@ alert('mohtava'.JSON.stringify(err));
 });	
 }
 function update(idss){
-alert(idss);
+
 $.ajax({
 url:"http://www.shahreroya.ir/demo2/gets.php",
 type:"GET",
@@ -165,6 +165,7 @@ for(i = 0; i < arr.items.length; i++) {
 	display=arr.items[i].fname_fa+arr.items[i].lname_fa;
 	fname_fa=arr.items[i].fname_fa;
 	lname_fa=arr.items[i].lname_fa;
+	if(lname_fa=='undefined'){lname_fa=''}
 	id_contact=arr.items[i].id_contact;
 	update_su(display,fname_fa,lname_fa,id_contact);
 
@@ -217,7 +218,7 @@ this.showlist = function(para)
 		  {
 			  for(var i = 0; i < res.rows.length; i++)
 			  {
-		  result.push({id : res.rows.item(i).ids,img :'img/benz.png', fname : res.rows.item(i).fname_fa, lname : res.rows.item(i).lname_fa, display : res.rows.item(i).display})
+		  result.push({id : res.rows.item(i).ids,img : 'img/icons.png', fname : res.rows.item(i).fname_fa, lname : res.rows.item(i).lname_fa, display : res.rows.item(i).display})
 		  }
 		  deferred.resolve(result);
 		});
@@ -228,16 +229,15 @@ this.showlist = function(para)
 
 scotchApp.controller('ListCtrl', function ($scope,todoService, $interval,$location,$routeParams) {	
 var param1 = $routeParams.param1;
-
+//alert(param1);
 todoService.showlist(param1).then(function(items)
 {
 $scope.toppings = items;
-
 });
 //$scope.toppings = [
 //{ name: 'ali',fname: 'علی',lname: 'آلی',mname: 'الی', img: 'img/benz.png', wanted: true },
 //{ name: 'reza',fname: 'رضا',lname: 'رزا',mname: 'رضا', img: 'img/benz.png', wanted: false },
-//{ name: 'لیببت عغ ع عل عل عه ',fname: 'علی',lname: 'رضایی',mname: 'محمد رضا', img: 'img/benz.png', wanted: true },
+//{ name: 'mohammad ali rezay',fname: 'علی',lname: 'رضایی',mname: 'محمد رضا', img: 'img/benz.png', wanted: true },
 //{ name: 'saied',fname: 'سعید',lname: 'ساید',mname: 'ثایید', img: 'img/benz.png', wanted: false }
 //];
 });
@@ -296,12 +296,7 @@ $mdSidenav('right').close()
   });
 }; 
   $scope.settings = [
-  { name: 'آپارتمان مدرن', icon: 'img/icons/idea13.svg', links: '/list/modern' },
-  { name: 'فرهنگ آپارتمان نشینی',  icon: 'img/icons/construction47.svg', links: '/list/farhang'  },
-  { name: 'قوانین آپارتمان نشینی',  icon: 'img/icons/justice4.svg', links: '/list/rols'  },
-  { name: 'آپارتمان زیبا',  icon: 'img/icons/leaf64.svg', links: '/list/nice'  },
-  { name: 'نگهداری و تعمیرات آپارتمان',  icon: 'img/icons/wrenches12.svg', links: '/list/ripair'  },
-  { name: 'بخش شارژ آنلاین به زودی',  icon: 'img/icons/online15.svg', links: '/content/help/35'  }, 
+  { name: 'بازگردانی مخاطبان', icon: 'img/icons/idea13.svg', links: '/list/modern' }
   ];
 });
 	
