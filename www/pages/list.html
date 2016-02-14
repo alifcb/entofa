@@ -1,24 +1,32 @@
-<md-list ng-controller="ListCtrl" class="padd-65" ng-cloak>
-
-    <md-list-item ng-repeat="topping in toppings" layout="column" >
-<div  layout="row">
-      <img alt="{{ topping.display }}" ng-src="{{ topping.img }}" class="md-avatar" />
+<md-list  ng-controller="ListCtrl" class="padd-65" ng-cloak>
+    <div  ng-repeat="topping in toppings">
+ <md-list-item>
+      <img alt="{{ topping.display }}" ng-src="{{topping.img}}" class="md-avatar" />
     <p>{{ topping.display }}</p> 
-</div>
+<!--        <input type="checkbox" checklist-model="user.toppings" checklist-value="topping"> 
+-->
+<md-checkbox  type="checkbox" class="md-secondary" checklist-model="user.toppings"   checklist-value="topping"></md-checkbox>
+</md-list-item>
+ <md-list-item>
 <div flex>
      <md-content  layout="row" layout-padding>
       <md-input-container>
       
-        <input ng-model="topping.fname"  type="text">
+        <input ng-model="topping.fname_fa"  type="text">
       </md-input-container>
       <md-input-container>
 
-        <input ng-model="topping.lname" type="text">
+        <input ng-model="topping.lname_fa" type="text">
       </md-input-container>
   </md-content>  
 </div>      
+
 <md-divider></md-divider>  
   </md-list-item> 
+  </div>
 
+<md-button aria-label="menu" class="md-fab listup md-warn "  ng-click="updates()">
+  <md-icon  class="md-primary" md-svg-src="img/icons/collision.svg"></md-icon>
+</md-button>
 
-  </md-list >
+</md-list >

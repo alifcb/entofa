@@ -47,7 +47,7 @@ tx.executeSql('DROP TABLE IF EXISTS contact');
 //tx.executeSql('DROP TABLE IF EXISTS setting');
 tx.executeSql('CREATE TABLE IF NOT EXISTS contact(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ids INTEGER,id_phone INTEGER, fname text,lname text,display text,fname_fa text,lname_fa text,display_fa text,number text,flag INTEGER) ');
 tx.executeSql('CREATE TABLE IF NOT EXISTS setting(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title text,value text)');
-
+tx.executeSql('CREATE TABLE IF NOT EXISTS backup(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ids INTEGER,id_phone INTEGER, fname text,lname text,display text,fname_fa text,lname_fa text,display_fa text,number text,flag INTEGER) ');
 }
 
 function successCB() {
@@ -96,9 +96,7 @@ var x=long=0;res=display='';
 
 if(contacts[i].phoneNumbers != null && contacts[i].phoneNumbers.length > 0 && contacts[i].phoneNumbers[0].value != null && contacts[i].phoneNumbers[0].value != undefined ) {
 var number =contacts[i].phoneNumbers[0].value;
-} else {
-var number =09180000000;
-}
+
 var lname ='';
 var fname ='';
 
@@ -121,7 +119,9 @@ document.getElementById('loader').style.display = 'none';
 document.getElementById('demo').style.display = 'block';
 document.getElementById('starter').style.display = 'block';
 document.getElementById("demo").innerHTML = y;
-
+} else {
+var number =09180000000;
+}
 }//for
 }//end
 

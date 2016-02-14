@@ -1,8 +1,4 @@
-		
-		
-		
-		
-		
+<script>			
 var options = new ContactFindOptions();
 options.filter = 283;  //just it's an example. Looking for id 20.
 var fields = ['id'];
@@ -27,4 +23,4 @@ navigator.contacts.find(fields,function(contacts){
 }, function(contactError) {
        navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
 }, options);
-}
+</script>	

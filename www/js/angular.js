@@ -1,6 +1,6 @@
 // JavaScript Document
 //////////////////////////////////////////////////////////////////materila angolar routing
- var scotchApp = angular.module('StarterApp', ['ngRoute','ngMaterial','ngSanitize','angular-progress-arc'] );
+ var scotchApp = angular.module('StarterApp', ['ngRoute','ngMaterial','ngSanitize','angular-progress-arc','checklist-model'] );
 
 // configure our routes
 scotchApp.config(function($routeProvider) {	  
@@ -9,7 +9,6 @@ $routeProvider
 // route for the home page
 .when('/', {
 	templateUrl : 'pages/home.html',
-	//controller  : 'mainController'
 })
 
 // route for the list page
@@ -33,9 +32,16 @@ $routeProvider
 })
 
 });
-scotchApp.controller('mainController', function($scope,$location,$routeParams) {
-	document.addEventListener("backbutton", function(e){
-	if($location.path=='/'){
+scotchApp.controller('mainController', function($scope,$location,$routeParams,$mdToast) {
+$mdToast.show(
+      $mdToast.simple()
+        .textContent('برنامه در حال در یافت اطلاعات لیست مخاطبین است لطفا چند لحظه صبر کنید!')
+        .position('bottom right')
+        .hideDelay(7000)
+);
+
+document.addEventListener("backbutton", function(e){
+	if($location.path()=='/' ){
 	e.preventDefault();
 	navigator.app.exitApp();
 	}
@@ -58,6 +64,16 @@ scotchApp.controller('mainController', function($scope,$location,$routeParams) {
 scotchApp.controller('maincunter', function ($scope,todoService, $interval,$location,$routeParams) {
 // az servise estefadeh shavad v dakhel if az yek function bray greftan etelat , update an
 
+document.addEventListener("backbutton", function(e){
+	if($location.path()=='/execut/2' ){
+	e.preventDefault();
+	navigator.app.exitApp();
+	}
+	else {
+	navigator.app.backHistory()
+	}
+}, false);
+
 $scope.go = function ( path ) {$location.path( path );};
 
 todoService.idphone().then(function(items)
@@ -65,19 +81,24 @@ todoService.idphone().then(function(items)
 	$scope.todos = items;
 	$scope.listid = 'list/'+items;
 });
-M=$scope.todos;
+
+todoService.endupdate().then(function(items)
+{
+$scope.ends = items;
+if($scope.ends<=15){M=150}else{
+M=($scope.ends)*10;}
 x=y=0.00;	
 var promise;
-promise=$interval(function(){ $scope.callAtInterval(); }, 300);
+promise=$interval(function(){ $scope.callAtInterval(); }, 400);
 $scope.callAtInterval = function() {
+
 x=x+0.01; y=y+1; 
-if(y==7){update($scope.todos);}
+if(y==70){update($scope.todos);}
 if(y>=100){y=100;}
 if(y>=100){y=100;
 document.getElementById('render').style.display = 'none';
 document.getElementById('endss').style.display = 'block';
 $scope.stop();
-
 }
 $scope.size = 270;
 $scope.progress = x;
@@ -89,7 +110,7 @@ $scope.counterClockwise = '';
 $scope.stop = function() {
 $interval.cancel(promise);
 };
-
+});
 
 var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
 db.transaction(queryDB, errorCB);
@@ -208,6 +229,20 @@ deferred.resolve(result);
 	  });
 	  return deferred.promise;
     },
+this.endupdate = function()
+  {   var deferredx, result = [];
+        deferredx = $q.defer();
+	  var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+	  db.transaction(function(tx) 
+	  { tx.executeSql("SELECT count(*) AS xxx FROM contact where 1", [], function(tx, resu) 
+		  { 
+result=resu.rows.item(0).xxx;
+deferredx.resolve(result);
+		});
+	  });
+	  return deferredx.promise;
+	  
+    },
 this.showlist = function(para)
   {   var idcom=para;
 	  var deferred, result = [];
@@ -218,28 +253,101 @@ this.showlist = function(para)
 		  {
 			  for(var i = 0; i < res.rows.length; i++)
 			  {
-		  result.push({id : res.rows.item(i).ids,img : 'img/icons.png', fname : res.rows.item(i).fname_fa, lname : res.rows.item(i).lname_fa, display : res.rows.item(i).display})
+		  result.push({id : res.rows.item(i).ids,img : 'img/icons.png', fname_fa : res.rows.item(i).fname_fa, lname_fa : res.rows.item(i).lname_fa, display_fa : res.rows.item(i).display_fa, fname : res.rows.item(i).fname, lname : res.rows.item(i).lname, display : res.rows.item(i).display})
 		  }
 		  deferred.resolve(result);
 		});
 	  });
 	  return deferred.promise;
-    }
+    },
+	
+this.listm = function(parad)
+  {  
+text = JSON.stringify(parad);
+arr = JSON.parse(text);
+var i;
+
+for(i = 0; i < arr.length; i++) {
+var options = new ContactFindOptions();
+options.filter = arr[i].id;  //just it's an example. Looking for id 20.
+var fields = ['id'];
+var contact;   
+navigator.contacts.find(fields,function(contacts){
+if (contacts.length==0) 
+   contact = navigator.contacts.create();
+else
+   contact = contacts[0];
+
+  var tContactName = new ContactName();
+    tContactName.givenName = arr[i].fname_fa;
+    tContactName.familyName =arr[i].lname_fa;
+    contact.name = tContactName; 
+    contact.displayName=arr[i].fname_fa+' '+arr[i].lname_fa;
+
+    contact.save(function(contact) {
+       navigator.notification.alert('Saved sucessfully!!!',function(){},'Title');
+    }, function(contactError) {
+       navigator.notification.alert('Error contact save: '+contactError.code,function(){},'Title');
+    })
+}, function(contactError) {
+       navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
+}, options);	
+id_contact=arr[i].id;
+display=arr[i].display;
+fname=arr[i].fname;
+lname=arr[i].lname;
+display_fa=arr[i].fname_fa+' '+arr[i].lname_fa;
+fname_fa=arr[i].fname_fa;
+lname_fa=arr[i].lname_fa;
+if(lname_fa=='undefined'){lname_fa=''}
+insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact);
+}
+
+function insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {alert(display+fname+lname+display_fa+fname_fa+lname_fa+id_contact);
+var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+db.transaction(function(tx){insert_con(tx,display,fname,lname,display_fa,fname_fa,lname_fa,id_contact);},  testonlyd, endsup);
+
+}
+
+function insert_con(tx,display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {//alert(display+'-'+fname+'-'+lname+'-'+id_conatct);
+tx.executeSql("INSERT INTO backup(ids,id_phone,fname,lname,display,fname_fa,lname_fa,display_fa,number,flag) values("+ids+",921,'"+fname+"','"+lname+"','"+display+"','"+fname_fa+"','"+lname_fa+"','"+display_fa+"',921,1)", [], testonlyd, endsup );
+}
+function endsup(err){
+    alert("Error processing SQL: "+err.message);
+}	
+function testonlyd(){
+}}	
 });
 
-scotchApp.controller('ListCtrl', function ($scope,todoService, $interval,$location,$routeParams) {	
+scotchApp.controller('ListCtrl', function ($scope,todoService,$location,$routeParams) {
 var param1 = $routeParams.param1;
-//alert(param1);
+$scope.idphone=param1;
+document.addEventListener("backbutton", function(e){
+	if($location.path()=='/list/'+param1 ){
+	e.preventDefault();
+	navigator.app.exitApp();
+	}
+	else {
+	navigator.app.backHistory()
+	}
+}, false);
+
 todoService.showlist(param1).then(function(items)
 {
 $scope.toppings = items;
+$scope.user = {
+ toppings: [$scope.toppings[1]]
+};
+ssddd=$scope.user.toppings; 
 });
+$scope.updates = function () { todoService.listm(ssddd)};
 //$scope.toppings = [
-//{ name: 'ali',fname: 'علی',lname: 'آلی',mname: 'الی', img: 'img/benz.png', wanted: true },
-//{ name: 'reza',fname: 'رضا',lname: 'رزا',mname: 'رضا', img: 'img/benz.png', wanted: false },
-//{ name: 'mohammad ali rezay',fname: 'علی',lname: 'رضایی',mname: 'محمد رضا', img: 'img/benz.png', wanted: true },
-//{ name: 'saied',fname: 'سعید',lname: 'ساید',mname: 'ثایید', img: 'img/benz.png', wanted: false }
+//{ id: 1,display: 'ali',fname: 'علی',lname: 'آلی'},
+//{ id: 2,display: 'reza',fname: 'رضا',lname: 'رزا' },
+//{ id: 3,display: 'ali rezay',fname: 'علی',lname: 'رضایی' },
+//{ id: 4,display: 'saied',fname: 'سعید',lname: 'ساید' }
 //];
+
 });
 ////////////////////////////////////////////////////////////////////////////////////sid nav
 scotchApp.controller('Sidnav', function ($scope, $timeout, $mdSidenav, $log) {
@@ -300,6 +408,5 @@ $mdSidenav('right').close()
   ];
 });
 	
-////////////////////////////////////////////////////////////angular-progress-arc
-
+////////////////////////////////////////////////////////////angular-toaset
 
