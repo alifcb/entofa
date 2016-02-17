@@ -1,9 +1,6 @@
-<md-list  ng-controller="ListCtrl" class="padd-65" ng-cloak>
+<md-list  ng-controller="backup" class="padd-65" ng-cloak>
     <div  ng-repeat="topping in toppings">
-     <md-list-item ng-show="mySwitch">
-      <md-progress-linear md-mode="indeterminate"></md-progress-linear>
-       </md-list-item>
- <md-list-item ng-show="mySwitch">
+ <md-list-item>
       <img alt="{{ topping.display }}" ng-src="{{topping.img}}" class="md-avatar" />
     <p>{{ topping.display }}</p> 
 <!--        <input type="checkbox" checklist-model="user.toppings" checklist-value="topping"> 
@@ -15,19 +12,18 @@
      <md-content  layout="row" layout-padding>
       <md-input-container>
       
-        <input   ng-disabled="disabl" ng-model="topping.fname_fa"  type="text">
+        <input ng-model="topping.fname_fa"  type="text">
       </md-input-container>
       <md-input-container>
 
-        <input   ng-disabled="disabl" ng-model="topping.lname_fa" type="text">
+        <input ng-model="topping.lname_fa" type="text">
       </md-input-container>
-      
-  </md-content>  
+  </md-content>
 </div>      
 
 <md-divider></md-divider>  
   </md-list-item> 
-</div>
+  </div>
 
 <md-button aria-label="menu" class="md-fab listup md-warn "  ng-click="updates()">
   <md-icon  class="md-primary" md-svg-src="img/icons/businessmen25.svg"></md-icon>

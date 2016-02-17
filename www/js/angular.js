@@ -8,9 +8,11 @@ scotchApp.config(function($routeProvider) {
 $routeProvider
 // route for the home page
 .when('/', {
+	templateUrl : 'pages/start.html',
+})
+.when('/home/:param1', {
 	templateUrl : 'pages/home.html',
 })
-
 // route for the list page
 .when('/execut/:param1', {
 	templateUrl : 'pages/execut.html',
@@ -19,26 +21,13 @@ $routeProvider
 .when('/list/:param1', {
 	templateUrl : 'pages/list.html',
 })
- // route for the content page
-.when('/content/:param1/:page1', {
-	templateUrl : 'pages/content.html',
-
+// route for the list page
+.when('/backup', {
+	templateUrl : 'pages/backup.html',
 })
-
- // route for the tabs page
-.when('/tabs', {
-	templateUrl : 'pages/tabs.html',
-	controller  : 'tabsController'
-})
-
 });
-scotchApp.controller('mainController', function($scope,$location,$routeParams,$mdToast) {
-$mdToast.show(
-      $mdToast.simple()
-        .textContent('برنامه در حال در یافت اطلاعات لیست مخاطبین است لطفا چند لحظه صبر کنید!')
-        .position('bottom right')
-        .hideDelay(7000)
-);
+scotchApp.controller('startController', function($scope,todoService,$location,$routeParams) {
+$scope.go = function ( path ) {$location.path( path );};
 
 document.addEventListener("backbutton", function(e){
 	if($location.path()=='/' ){
@@ -48,31 +37,40 @@ document.addEventListener("backbutton", function(e){
 	else {
 	navigator.app.backHistory()
 	}
-	}, false);
-	$scope.go = function ( path ) {
-	$location.path( path );
-	};
-	$scope.unescap = function ( str ) {
-	$scope.myHTML =ripl= unescape( str );
-	};
-	$scope.cont = function ( paths ) {
-	var param1 = $routeParams.param1;
-	content='content/'+param1+'/';
-	$location.path( content+paths );
-};});
+}, false);
 
+todoService.idphone().then(function(items)
+{
+	if(items){$scope.execuu=true}else{$scope.execuu=false}
+	$scope.listids = 'list/'+items;
+});
+});
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////main
+scotchApp.controller('mainController', function($scope,todoService,$location,$routeParams,$mdToast) {
+$mdToast.show(
+      $mdToast.simple()
+        .textContent('برنامه در حال در یافتن اطلاعات لیست مخاطبین است لطفا چند لحظه صبر کنید!')
+        .position('bottom right')
+        .hideDelay(7000)
+);
+
+$scope.go = function ( path ) {$location.path( path );};
+var param1 = $routeParams.param1;
+todoService.start(param1);
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////execut
 scotchApp.controller('maincunter', function ($scope,todoService, $interval,$location,$routeParams) {
 // az servise estefadeh shavad v dakhel if az yek function bray greftan etelat , update an
-
 document.addEventListener("backbutton", function(e){
-	if($location.path()=='/execut/2' ){
+if($location.path()=='/execut/2' ){
 	e.preventDefault();
 	navigator.app.exitApp();
 	}
 	else {
 	navigator.app.backHistory()
-	}
+}
 }, false);
+
 
 $scope.go = function ( path ) {$location.path( path );};
 
@@ -84,12 +82,13 @@ todoService.idphone().then(function(items)
 
 todoService.endupdate().then(function(items)
 {
+	
 $scope.ends = items;
 if($scope.ends<=15){M=150}else{
-M=($scope.ends)*10;}
+M=($scope.ends)*9;}
 x=y=0.00;	
 var promise;
-promise=$interval(function(){ $scope.callAtInterval(); }, 400);
+promise=$interval(function(){ $scope.callAtInterval(); }, M);
 $scope.callAtInterval = function() {
 
 x=x+0.01; y=y+1; 
@@ -117,6 +116,10 @@ db.transaction(queryDB, errorCB);
 
 function queryDB(tx) {//alert('swdsw');
     tx.executeSql('SELECT * FROM contact', [], querySuccess, errorCB);
+}
+//success db
+function errorCB(err) {
+    alert("Error processing SQL: "+err.message);
 }
 //namayesh etelat zakhire shode (option)
 function querySuccess(tx, results) { 
@@ -216,6 +219,136 @@ function testonly(){
 
 scotchApp.service('todoService', function($q) 
 {
+
+this.start = function(param)
+{  
+var id_phone = {}; // Globally scoped object
+id_phone.parid=param;
+var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+db.transaction(tablel, errorCB, successCp);
+
+
+function tablel(tx){
+tx.executeSql('DROP TABLE IF EXISTS contact');
+tx.executeSql('CREATE TABLE IF NOT EXISTS contact(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ids INTEGER,id_phone INTEGER, fname text,lname text,display text,fname_fa text,lname_fa text,display_fa text,number text,flag INTEGER) ');
+
+}
+
+function successCp() {
+var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+db.transaction(flag_one, one_start);
+}
+
+
+function flag_one(tx) {
+tx.executeSql('SELECT * FROM setting where title="id_phone"', [], find_id, one_start);
+}
+function find_id(tx, results) { // be dast avardan id_phone in id bayad dar ghesmat insert gharar begirad
+ id_phone.id = results.rows.item(0).value;
+	//pyda kardan contacts ha 
+	
+var fields = ['displayName','name','id','phoneNumbers'];
+navigator.contacts.find(fields, onSuccess, onError, options);
+}
+
+function one_start(tx) { 
+//pyda kardan contacts ha 
+var fields = ['displayName','name','id','phoneNumbers'];
+navigator.contacts.find(fields, onSuccess, onError, options);
+
+var dbs = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+dbs.transaction (function(tx){codphone(tx);},errorCB);
+
+function codphone(tx){  
+ id_phone.id = Math.floor((Math.random() * 10000000) + 1);	
+tx.executeSql('INSERT INTO setting(title,value) values("id_phone",'+id_phone.id+')');
+alert(id_phone.id);
+}
+}
+//success db
+function errorCB(err) {
+    alert("Error processing SQL: "+err.message);
+}
+// onSuccess contacts
+function onSuccess(contacts) {
+var y=0;
+var arr = Array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','t','s','y','w','v','x','z','u','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','T','V','Q','R','S','Y','W','X','Z','U');
+
+for (var i=0; i<contacts.length; i++) {
+var x=long=0;res=display='';
+
+if(contacts[i].phoneNumbers != null && contacts[i].phoneNumbers.length > 0 && contacts[i].phoneNumbers[0].value != null && contacts[i].phoneNumbers[0].value != undefined ) {
+var number =contacts[i].phoneNumbers[0].value;
+} else {
+var number =0918;
+}
+var lname ='';
+var fname ='';
+if(id_phone.parid=='all'){
+
+var id = contacts[i].id;
+var display = contacts[i].displayName;
+
+if(display==null){ }else{
+var lname =contacts[i].name.familyName;	
+var fname =contacts[i].name.givenName;	
+var res=display.split("",1);
+if(arr.contains(res[0])) { var x=1;}
+}
+
+if(x==1){
+var y=y+1;
+insert(id,display,fname,lname,number);
+}
+
+}else if(number !=0918 && id_phone.parid=='number'){
+var id = contacts[i].id;
+var display = contacts[i].displayName;
+
+if(display==null){ }else{
+var lname =contacts[i].name.familyName;	
+var fname =contacts[i].name.givenName;	
+var res=display.split("",1);
+if(arr.contains(res[0])) { var x=1;}
+}
+
+if(x==1){
+var y=y+1;
+insert(id,display,fname,lname,number);
+}	
+}
+document.getElementById('loader').style.display = 'none';
+document.getElementById('demo').style.display = 'block';
+document.getElementById('starter').style.display = 'block';
+document.getElementById("demo").innerHTML = y;
+
+}//for
+}//end
+
+function insert(id,display,fname,lname,number){//alert(display+'-'+fname+'-'+lname+'-'+id+'-'+number);
+var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+db.transaction(function(tx){insertco(tx,id,display,fname,lname,number);}, errorCB);
+}
+
+function insertco(tx,id,display,fname,lname,number){//alert(display+'-'+fname+'-'+lname+'-'+id+'-'+number);
+tx.executeSql('INSERT INTO contact(ids,id_phone,fname,lname,display,fname_fa,lname_fa,display_fa,number,flag) values('+id+','+id_phone.id+', "'+fname+'", "'+lname+'", "'+display+'","1","1","1","'+number+'",0)');
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function onError(contactError) {
+  alert('onError!');
+}
+
+// jahat baresi vjod loghat english
+Array.prototype.contains = function ( needle ) {
+   for (i in this) {
+       if (this[i] == needle) return true;
+   }
+   return false;
+}		
+},	
+	
 this.idphone = function()
   {   var deferred, result = [];
         deferred = $q.defer();
@@ -260,37 +393,61 @@ this.showlist = function(para)
 	  });
 	  return deferred.promise;
     },
-	
+this.showbackup = function()
+  {  
+	  var deferred, result = [];
+	  deferred = $q.defer();
+	  var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+	  db.transaction(function(tx) 
+	  { tx.executeSql("select * from backup where 1", [], function(tx, res) 
+		  {
+			  for(var i = 0; i < res.rows.length; i++)
+			  {
+		  result.push({id : res.rows.item(i).ids,img : 'img/icons.png', fname_fa : res.rows.item(i).fname_fa, lname_fa : res.rows.item(i).lname_fa, display_fa : res.rows.item(i).display_fa, fname : res.rows.item(i).fname, lname : res.rows.item(i).lname, display : res.rows.item(i).display})
+		  }
+		  deferred.resolve(result);
+		});
+	  });
+	  return deferred.promise;
+    },
 this.listm = function(parad)
   {  
 text = JSON.stringify(parad);
 arr = JSON.parse(text);
 var i;
-
+var vc=0;
 for(i = 0; i < arr.length; i++) {
 var options = new ContactFindOptions();
 options.filter = arr[i].id;  //just it's an example. Looking for id 20.
 var fields = ['id'];
 var contact;   
+var idat=arr[i].id;
+
 navigator.contacts.find(fields,function(contacts){
 if (contacts.length==0) 
    contact = navigator.contacts.create();
 else
    contact = contacts[0];
+   
+   alert(idat);
 
-  var tContactName = new ContactName();
-    tContactName.givenName = arr[i].fname_fa;
-    tContactName.familyName =arr[i].lname_fa;
-    contact.name = tContactName; 
-    contact.displayName=arr[i].fname_fa+' '+arr[i].lname_fa;
+if(arr[i].lname_fa=='undefined'){lname_fa=''}else{lname_fa=arr[i].lname_fa}
+var tContactName = new ContactName();
+  tContactName.givenName = arr[i].fname_fa;
+  tContactName.familyName =lname_fa;
+  contact.name = tContactName; 
+  contact.displayName=arr[i].fname_fa+' '+lname_fa;
 
-    contact.save(function(contact) {
-       navigator.notification.alert('Saved sucessfully!!!',function(){},'Title');
-    }, function(contactError) {
-       navigator.notification.alert('Error contact save: '+contactError.code,function(){},'Title');
-    })
+contact.save(function(contact) {
+  vc=vc+1;
+	 navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
+   //  document.getElementById('cont-'+arr[i].id).style.display = 'none';
+  }, function(contactError) {
+		  vc=vc+1;
+	 navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
+  })
 }, function(contactError) {
-       navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
+	 navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
 }, options);	
 id_contact=arr[i].id;
 display=arr[i].display;
@@ -303,19 +460,20 @@ if(lname_fa=='undefined'){lname_fa=''}
 insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact);
 }
 
+
 function insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {alert(display+fname+lname+display_fa+fname_fa+lname_fa+id_contact);
 var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
 db.transaction(function(tx){insert_con(tx,display,fname,lname,display_fa,fname_fa,lname_fa,id_contact);},  testonlyd, endsup);
-
 }
 
 function insert_con(tx,display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {//alert(display+'-'+fname+'-'+lname+'-'+id_conatct);
-tx.executeSql("INSERT INTO backup(ids,id_phone,fname,lname,display,fname_fa,lname_fa,display_fa,number,flag) values("+ids+",921,'"+fname+"','"+lname+"','"+display+"','"+fname_fa+"','"+lname_fa+"','"+display_fa+"',921,1)", [], testonlyd, endsup );
+tx.executeSql("INSERT INTO backup(ids,id_phone,fname,lname,display,fname_fa,lname_fa,display_fa,number,flag) values("+id_contact+",921,'"+fname+"','"+lname+"','"+display+"','"+fname_fa+"','"+lname_fa+"','"+display_fa+"',921,1)", [], testonlyd, endsup );
 }
 function endsup(err){
     alert("Error processing SQL: "+err.message);
 }	
 function testonlyd(){
+	
 }}	
 });
 
@@ -332,15 +490,6 @@ document.addEventListener("backbutton", function(e){
 	}
 }, false);
 
-todoService.showlist(param1).then(function(items)
-{
-$scope.toppings = items;
-$scope.user = {
- toppings: [$scope.toppings[1]]
-};
-ssddd=$scope.user.toppings; 
-});
-$scope.updates = function () { todoService.listm(ssddd)};
 //$scope.toppings = [
 //{ id: 1,display: 'ali',fname: 'علی',lname: 'آلی'},
 //{ id: 2,display: 'reza',fname: 'رضا',lname: 'رزا' },
@@ -348,7 +497,41 @@ $scope.updates = function () { todoService.listm(ssddd)};
 //{ id: 4,display: 'saied',fname: 'سعید',lname: 'ساید' }
 //];
 
+todoService.showlist(param1).then(function(items)
+{
+$scope.toppings = items;
+$scope.user = {
+ toppings: [$scope.toppings[0]]
+};
+ssddd=$scope.user.toppings; 
 });
+
+$scope.updates = function () { todoService.listm(ssddd);
+
+$scope.user = {
+ toppings: []
+};
+$scope.mySwitch ="true"
+$scope.mylist ="false"
+};
+});
+
+scotchApp.controller('backup', function ($scope,todoService,$location,$routeParams) {
+var param1 = $routeParams.param1;
+$scope.idphone=param1;
+
+todoService.showbackup().then(function(items)
+{
+$scope.toppings = items;
+$scope.user = {
+ toppings: [$scope.toppings[0]]
+};
+ssddd=$scope.user.toppings; 
+});
+$scope.updates = function () { todoService.listm(ssddd)};
+
+});
+
 ////////////////////////////////////////////////////////////////////////////////////sid nav
 scotchApp.controller('Sidnav', function ($scope, $timeout, $mdSidenav, $log) {
 $scope.toggleLeft = buildDelayedToggler('left');

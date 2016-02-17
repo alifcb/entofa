@@ -3,12 +3,11 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
         <!-- WARNING: for iOS 7, remove the width=device-width
          and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
           <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css"> 
         <title>Hello World</title>
@@ -43,7 +42,7 @@
     </md-sidenav>
 
 
-<div ng-controller="mainController" >
+<div ng-controller="startController" >
     <md-toolbar class="fixed">
       <div class="md-toolbar-tools">
         <md-button class="md-icon-button" aria-label="Settings">
@@ -64,7 +63,7 @@
     </md-toolbar>
 </div>
 
-    <div ng-view ></div>
+<div ng-view  class="fade"></div>
 
 </div>    
 <script src="bower_components/angular/angular.min.js"></script>
