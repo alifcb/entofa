@@ -462,7 +462,7 @@ insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact);
 }
 
 
-function insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {alert(display+fname+lname+display_fa+fname_fa+lname_fa+id_contact);
+function insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {//alert(display+fname+lname+display_fa+fname_fa+lname_fa+id_contact);
 var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
 db.transaction(function(tx){insert_con(tx,display,fname,lname,display_fa,fname_fa,lname_fa,id_contact);},  testonlyd, endsup);
 }
@@ -528,7 +528,7 @@ if(intr==tedad){
 $mdToast.show(
       $mdToast.simple()
         .textContent('بروزرسانی ها به اتمام رسید!')
-        .position('bottom right')
+        .position('bottom')
         .hideDelay(12000)
 );
 $scope.flid ="true";
@@ -548,7 +548,7 @@ $scope.user = {
 $mdToast.show(
       $mdToast.simple()
         .textContent('برنامه در حال اجرا می باشد تا اتمام بروز رسانی منتظر بمانید!')
-        .position('bottom right')
+        .position('bottom')
         .hideDelay(8000)
 );
 
