@@ -82,10 +82,10 @@ todoService.idphone().then(function(items)
 
 todoService.endupdate().then(function(items)
 {
-	
+
 $scope.ends = items;
 if($scope.ends<=15){M=150}else{
-M=($scope.ends)*9;}
+M=($scope.ends)*10;}
 x=y=0.00;	
 var promise;
 promise=$interval(function(){ $scope.callAtInterval(); }, M);
@@ -124,15 +124,16 @@ function errorCB(err) {
 //namayesh etelat zakhire shode (option)
 function querySuccess(tx, results) { 
  var len = results.rows.length;
-ros=len/15;
+ //alert(len);
+ros=len/2;
 rund=Math.floor(ros);
 
 var y=z=0;
 for (var x=1; x<=rund+1; x++){ 
 
 result=[];
-z=(x-1)*15;
-y=x*15;
+z=(x-1)*2;
+y=x*2;
 if(x==rund+1){y=len;}
 //alert(y+'-'+z);
 for (var i=z; i<y; i++){
@@ -170,7 +171,7 @@ alert('mohtava'.JSON.stringify(err));
 });	
 }
 function update(idss){
-
+//alert(idss);
 $.ajax({
 url:"http://www.shahreroya.ir/demo2/gets.php",
 type:"GET",
@@ -219,7 +220,7 @@ function testonly(){
 
 scotchApp.service('todoService', function($q) 
 {
-
+///////////////////////////////////////////////////////////////////////////////////////////start
 this.start = function(param)
 {  
 var id_phone = {}; // Globally scoped object
@@ -231,7 +232,6 @@ db.transaction(tablel, errorCB, successCp);
 function tablel(tx){
 tx.executeSql('DROP TABLE IF EXISTS contact');
 tx.executeSql('CREATE TABLE IF NOT EXISTS contact(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ids INTEGER,id_phone INTEGER, fname text,lname text,display text,fname_fa text,lname_fa text,display_fa text,number text,flag INTEGER) ');
-
 }
 
 function successCp() {
@@ -246,15 +246,15 @@ tx.executeSql('SELECT * FROM setting where title="id_phone"', [], find_id, one_s
 function find_id(tx, results) { // be dast avardan id_phone in id bayad dar ghesmat insert gharar begirad
  id_phone.id = results.rows.item(0).value;
 	//pyda kardan contacts ha 
-	
+
 var fields = ['displayName','name','id','phoneNumbers'];
-navigator.contacts.find(fields, onSuccess, onError, options);
+navigator.contacts.find(fields, onSuccess, onError);
 }
 
 function one_start(tx) { 
 //pyda kardan contacts ha 
 var fields = ['displayName','name','id','phoneNumbers'];
-navigator.contacts.find(fields, onSuccess, onError, options);
+navigator.contacts.find(fields, onSuccess, onError);
 
 var dbs = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
 dbs.transaction (function(tx){codphone(tx);},errorCB);
@@ -262,7 +262,7 @@ dbs.transaction (function(tx){codphone(tx);},errorCB);
 function codphone(tx){  
  id_phone.id = Math.floor((Math.random() * 10000000) + 1);	
 tx.executeSql('INSERT INTO setting(title,value) values("id_phone",'+id_phone.id+')');
-alert(id_phone.id);
+//alert(id_phone.id);
 }
 }
 //success db
@@ -384,9 +384,9 @@ this.showlist = function(para)
 	  db.transaction(function(tx) 
 	  { tx.executeSql("select * from contact where id_phone="+idcom, [], function(tx, res) 
 		  {
-			  for(var i = 0; i < res.rows.length; i++)
-			  {
-		  result.push({id : res.rows.item(i).ids,img : 'img/icons.png', fname_fa : res.rows.item(i).fname_fa, lname_fa : res.rows.item(i).lname_fa, display_fa : res.rows.item(i).display_fa, fname : res.rows.item(i).fname, lname : res.rows.item(i).lname, display : res.rows.item(i).display})
+		  for(var i = 0; i < res.rows.length; i++)
+		  {
+			  result.push({id : res.rows.item(i).ids,img : 'img/icons.png', fname_fa : res.rows.item(i).fname_fa, lname_fa : res.rows.item(i).lname_fa, display_fa : res.rows.item(i).display_fa, fname : res.rows.item(i).fname, lname : res.rows.item(i).lname, display : res.rows.item(i).display})
 		  }
 		  deferred.resolve(result);
 		});
@@ -429,7 +429,7 @@ if (contacts.length==0)
 else
    contact = contacts[0];
    
-   alert(idat);
+  // alert(idat);
 
 if(arr[i].lname_fa=='undefined'){lname_fa=''}else{lname_fa=arr[i].lname_fa}
 var tContactName = new ContactName();
@@ -440,14 +440,15 @@ var tContactName = new ContactName();
 
 contact.save(function(contact) {
   vc=vc+1;
-	 navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
-   //  document.getElementById('cont-'+arr[i].id).style.display = 'none';
+//	 navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
+  document.getElementById('number').innerHTML = vc;
   }, function(contactError) {
 		  vc=vc+1;
-	 navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
+		  document.getElementById('number').innerHTML = vc;
+	// navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
   })
 }, function(contactError) {
-	 navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
+//	 navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
 }, options);	
 id_contact=arr[i].id;
 display=arr[i].display;
@@ -477,7 +478,10 @@ function testonlyd(){
 }}	
 });
 
-scotchApp.controller('ListCtrl', function ($scope,todoService,$location,$routeParams) {
+scotchApp.controller('ListCtrl', function ($scope,todoService,$interval,$location,$routeParams,$mdToast) {
+$scope.mylist ="true"
+$scope.flid ="true";
+
 var param1 = $routeParams.param1;
 $scope.idphone=param1;
 document.addEventListener("backbutton", function(e){
@@ -506,13 +510,48 @@ $scope.user = {
 ssddd=$scope.user.toppings; 
 });
 
-$scope.updates = function () { todoService.listm(ssddd);
 
+
+$scope.updates = function () { 
+todoService.listm(ssddd);
+text = JSON.stringify(ssddd);
+arr = JSON.parse(text);
+tedad=arr.length;
+//alert(tedad);
+
+promise=$interval(function(){ $scope.callAtInterval(); }, 500);
+$scope.callAtInterval = function() {
+intr=document.getElementById('number').innerHTML;
+//alert(intr);
+if(intr==tedad){
+
+$mdToast.show(
+      $mdToast.simple()
+        .textContent('بروزرسانی ها به اتمام رسید!')
+        .position('bottom right')
+        .hideDelay(12000)
+);
+$scope.flid ="true";
+$scope.stop();
+}
+
+}
+$scope.stop = function() {
+$interval.cancel(promise);
+};
+
+$scope.mySwitch ="true";
+$scope.mylist ="false";
 $scope.user = {
  toppings: []
 };
-$scope.mySwitch ="true"
-$scope.mylist ="false"
+$mdToast.show(
+      $mdToast.simple()
+        .textContent('برنامه در حال اجرا می باشد تا اتمام بروز رسانی منتظر بمانید!')
+        .position('bottom right')
+        .hideDelay(8000)
+);
+
 };
 });
 

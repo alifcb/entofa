@@ -33,7 +33,17 @@ md-input-container label:not(.md-container-ignore) { right: 0 !important;
 .md-button.md-fab.listup{
 	position:fixed;
 	bottom:25px;
-	left:25px;
+	left:20px;
+}
+.listy{
+	position:fixed;
+	bottom:5px;
+}
+#number{font-size:19px !important; padding: 0 5px 5px !important;}
+.md-button.md-fab.execuf{
+	position:fixed;
+	bottom:25px;
+	right:20px;
 }
 md-list-item .md-no-style.md-button, md-list-item.md-no-proxy.md-button{text-align:right !important;}
 md-list-item md-icon{margin-left:10px !important; margin-right:0px !important;}

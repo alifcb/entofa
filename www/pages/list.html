@@ -1,25 +1,26 @@
 <md-list  ng-controller="ListCtrl" class="padd-65" ng-cloak>
-    <div  ng-repeat="topping in toppings">
-     <md-list-item ng-show="mySwitch">
-      <md-progress-linear md-mode="indeterminate"></md-progress-linear>
-       </md-list-item>
- <md-list-item ng-show="mySwitch">
+
+<!--     <md-list-item ng-show="mySwitch">
+      <md-progress-linear ></md-progress-linear>
+       </md-list-item>-->
+ <div  ng-repeat="topping in toppings">
+ <md-list-item >
       <img alt="{{ topping.display }}" ng-src="{{topping.img}}" class="md-avatar" />
     <p>{{ topping.display }}</p> 
 <!--        <input type="checkbox" checklist-model="user.toppings" checklist-value="topping"> 
 -->
-<md-checkbox  type="checkbox" class="md-secondary" checklist-model="user.toppings"   checklist-value="topping"></md-checkbox>
+<md-checkbox  ng-hide="mySwitch" type="checkbox" class="md-secondary" checklist-model="user.toppings"   checklist-value="topping"></md-checkbox>
 </md-list-item>
  <md-list-item>
 <div flex>
      <md-content  layout="row" layout-padding>
       <md-input-container>
       
-        <input   ng-disabled="disabl" ng-model="topping.fname_fa"  type="text">
+        <input   ng-model="topping.fname_fa"  type="text">
       </md-input-container>
       <md-input-container>
 
-        <input   ng-disabled="disabl" ng-model="topping.lname_fa" type="text">
+        <input  ng-model="topping.lname_fa" type="text">
       </md-input-container>
       
   </md-content>  
@@ -29,8 +30,13 @@
   </md-list-item> 
 </div>
 
-<md-button aria-label="menu" class="md-fab listup md-warn "  ng-click="updates()">
-  <md-icon  class="md-primary" md-svg-src="img/icons/businessmen25.svg"></md-icon>
+<md-button aria-label="menu"   ng-hide="flid" ng-show="mySwitch" class="md-fab execuf "  >
+
+<p id="number"></p>
 </md-button>
 
+<md-button  ng-disabled="mySwitch"aria-label="menu" class="md-fab listup md-warn "  ng-click="updates()">
+  <md-icon  class="md-primary" md-svg-src="img/icons/businessmen25.svg"></md-icon>
+</md-button>
+    <md-progress-linear  ng-hide="flid" class=" listy md-warn "></md-progress-linear>
 </md-list >
