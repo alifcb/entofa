@@ -1,15 +1,13 @@
 <md-list  ng-controller="ListCtrl" class="padd-65" ng-cloak>
+  <md-progress-linear class="md-warn" ng-show="loadlist"></md-progress-linear>
 
-<!--     <md-list-item ng-show="mySwitch">
-      <md-progress-linear ></md-progress-linear>
-       </md-list-item>-->
  <div  ng-repeat="topping in toppings">
  <md-list-item >
       <img alt="{{ topping.display }}" ng-src="{{topping.img}}" class="md-avatar" />
     <p>{{ topping.display }}</p> 
 <!--        <input type="checkbox" checklist-model="user.toppings" checklist-value="topping"> 
 -->
-<md-checkbox  ng-hide="mySwitch" type="checkbox" class="md-secondary" checklist-model="user.toppings"   checklist-value="topping"></md-checkbox>
+<md-checkbox  ng-hide="mylist" type="checkbox" class="md-secondary" checklist-model="user.toppings"   checklist-value="topping"></md-checkbox>
 </md-list-item>
  <md-list-item>
 <div flex>
@@ -30,13 +28,17 @@
   </md-list-item> 
 </div>
 
-<md-button aria-label="menu"   ng-hide="flid" ng-show="mySwitch" class="md-fab execuf "  >
+<md-button aria-label="menu"  ng-hide="flid" ng-show="mySwitch" class="md-fab execuf"  >
 
 <p id="number">0</p>
 </md-button>
 
-<md-button  ng-disabled="mySwitch"aria-label="menu" class="md-fab listup md-warn "  ng-click="updates()">
+<md-button  ng-show="myback" aria-label="menu" class="md-fab backup md-warn "  ng-click="go('backup/2')">
+  <md-icon  class="md-primary" md-svg-src="img/icons/data-storage-device.svg"></md-icon>
+</md-button>
+
+<md-button  ng-show="myexe" aria-label="menu" class="md-fab listup md-warn "  ng-click="updates()">
   <md-icon  class="md-primary" md-svg-src="img/icons/businessmen25.svg"></md-icon>
 </md-button>
-    <md-progress-linear  ng-hide="flid"  ng-show="mySwitch" class="listy md-warn "></md-progress-linear>
+    <md-progress-linear  ng-show="mySwitch" class="listy md-warn "></md-progress-linear>
 </md-list >

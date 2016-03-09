@@ -1,4 +1,3 @@
-// JavaScript Document
 //////////////////////////////////////////////////////////////////materila angolar routing
  var scotchApp = angular.module('StarterApp', ['ngRoute','ngMaterial','ngSanitize','angular-progress-arc','checklist-model'] );
 
@@ -8,10 +7,10 @@ scotchApp.config(function($routeProvider) {
 $routeProvider
 // route for the home page
 .when('/', {
-	templateUrl : 'pages/start.html',
-})
-.when('/home/:param1', {
 	templateUrl : 'pages/home.html',
+})
+.when('/start/:param1', {
+	templateUrl : 'pages/start.html',
 })
 // route for the list page
 .when('/execut/:param1', {
@@ -22,10 +21,23 @@ $routeProvider
 	templateUrl : 'pages/list.html',
 })
 // route for the list page
-.when('/backup', {
+.when('/backup/:param1', {
 	templateUrl : 'pages/backup.html',
 })
+.when('/online', {
+	templateUrl : 'pages/online.html',
+})
 });
+
+////////////////////////////////////////////////////////onlineCtrl
+scotchApp.controller('onlineCtrl',  function($scope,$location,$routeParams)
+{
+document.addEventListener("online", onOnline, false);
+function onOnline() {
+$location.path('/');
+}
+});
+//////////////////////////////////////////
 scotchApp.controller('startController', function($scope,todoService,$location,$routeParams) {
 $scope.go = function ( path ) {$location.path( path );};
 
@@ -40,13 +52,17 @@ document.addEventListener("backbutton", function(e){
 }, false);
 
 todoService.idphone().then(function(items)
-{
+{//alert(items);
 	if(items){$scope.execuu=true}else{$scope.execuu=false}
 	$scope.listids = 'list/'+items;
 });
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////main
 scotchApp.controller('mainController', function($scope,todoService,$location,$routeParams,$mdToast) {
+document.addEventListener("offline", onOffline, false);
+function onOffline() {
+$location.path('/online');
+}	
 $mdToast.show(
       $mdToast.simple()
         .textContent('برنامه در حال در یافتن اطلاعات لیست مخاطبین است لطفا چند لحظه صبر کنید!')
@@ -56,6 +72,7 @@ $mdToast.show(
 
 $scope.go = function ( path ) {$location.path( path );};
 var param1 = $routeParams.param1;
+param1='all';
 todoService.start(param1);
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////execut
@@ -84,20 +101,28 @@ todoService.endupdate().then(function(items)
 {
 
 $scope.ends = items;
-if($scope.ends<=15){M=150}else{
-M=($scope.ends)*10;}
+if($scope.ends<=10){M=120}else
+if($scope.ends>10 && $scope.ends<=50){M=($scope.ends)*11;}else
+if($scope.ends>50 && $scope.ends<=100){M=600}else{M=700;}
 x=y=0.00;	
 var promise;
 promise=$interval(function(){ $scope.callAtInterval(); }, M);
+
 $scope.callAtInterval = function() {
 
 x=x+0.01; y=y+1; 
-if(y==70){update($scope.todos);}
-if(y>=100){y=100;}
+if(y==65){update($scope.todos);}
 if(y>=100){y=100;
+todoService.flagup().then(function(items)
+{
+	var intor = items;
+if(intor==0){
 document.getElementById('render').style.display = 'none';
 document.getElementById('endss').style.display = 'block';
 $scope.stop();
+}
+});
+
 }
 $scope.size = 270;
 $scope.progress = x;
@@ -166,7 +191,6 @@ contenttype:"appliction/json",
  },
 error:function(err){
 alert('mohtava'.JSON.stringify(err));
-		
 },	
 });	
 }
@@ -217,7 +241,7 @@ function testonly(){
 	
 } 
 });	
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////todoService
 scotchApp.service('todoService', function($q) 
 {
 ///////////////////////////////////////////////////////////////////////////////////////////start
@@ -348,20 +372,36 @@ Array.prototype.contains = function ( needle ) {
    return false;
 }		
 },	
-	
-this.idphone = function()
-  {   var deferred, result = [];
+////////////////////////////////////////////////////////////////////////	
+this.flagup = function()
+  {// alert('ss');
+    var deferred, result = [];
         deferred = $q.defer();
 	  var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
 	  db.transaction(function(tx) 
-	  { tx.executeSql("SELECT * FROM setting where title='id_phone'", [], function(tx, res) 
+	  { tx.executeSql("SELECT count(*) as cunt FROM contact where fname_fa='1'", [], function(tx, res) 
 		  { 
-result=res.rows.item(0).value;
+result=res.rows.item(0).cunt;
 deferred.resolve(result);
 		});
 	  });
 	  return deferred.promise;
     },
+////////////////////////////////////////////////////////////////////////	
+this.idphone = function()
+{   var deferred, result = [];
+deferred = $q.defer();
+var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+db.transaction(function(tx) 
+{ tx.executeSql("SELECT * FROM setting where title='id_phone'", [], function(tx, res) 
+{ 
+result=res.rows.item(0).value;
+deferred.resolve(result);
+});
+});
+return deferred.promise;
+},	
+////////////////////////////////////////////////////////////////////////////////////
 this.endupdate = function()
   {   var deferredx, result = [];
         deferredx = $q.defer();
@@ -374,8 +414,8 @@ deferredx.resolve(result);
 		});
 	  });
 	  return deferredx.promise;
-	  
-    },
+ },
+////////////////////////////////////////////////////////////////	
 this.showlist = function(para)
   {   var idcom=para;
 	  var deferred, result = [];
@@ -400,16 +440,63 @@ this.showbackup = function()
 	  var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
 	  db.transaction(function(tx) 
 	  { tx.executeSql("select * from backup where 1", [], function(tx, res) 
-		  {
+		  {//alert(res.rows.length);
 			  for(var i = 0; i < res.rows.length; i++)
 			  {
-		  result.push({id : res.rows.item(i).ids,img : 'img/icons.png', fname_fa : res.rows.item(i).fname_fa, lname_fa : res.rows.item(i).lname_fa, display_fa : res.rows.item(i).display_fa, fname : res.rows.item(i).fname, lname : res.rows.item(i).lname, display : res.rows.item(i).display})
+				  if(res.rows.item(i).lname=='undefined'){lnames=''}else{lnames=res.rows.item(i).lname}
+		  result.push({id : res.rows.item(i).ids,img : 'img/icons.png', fname_fa : res.rows.item(i).fname_fa, lname_fa : res.rows.item(i).lname_fa, display_fa : res.rows.item(i).display_fa, fname : res.rows.item(i).fname, lname : lnames, display : res.rows.item(i).display})
 		  }
 		  deferred.resolve(result);
 		});
 	  });
 	  return deferred.promise;
     },
+///////////////////////////////////////////////////////////////////////////////////////update backupes
+this.listbac = function(parad)
+  {  
+text = JSON.stringify(parad);
+arr = JSON.parse(text);
+var i;
+var vc=0;
+for(i = 0; i < arr.length; i++) {
+var options = new ContactFindOptions();
+options.filter = arr[i].id;  //just it's an example. Looking for id 20.
+var fields = ['id'];
+var contact;   
+var idat=arr[i].id;
+var count=arr.length;
+var fname=arr[i].fname;
+var lname=arr[i].lname;
+var display=arr[i].fname+' '+arr[i].lname;
+navigator.contacts.find(fields,function(contacts){
+if (contacts.length==0) 
+   contact = navigator.contacts.create();
+else
+   contact = contacts[0];
+   
+ 
+var tContactName = new ContactName();
+  tContactName.givenName =fname;
+  tContactName.familyName =lname;
+  contact.name = tContactName; 
+  contact.displayName=display;
+
+contact.save(function(contact) {
+  vc=vc+1;
+// navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
+  document.getElementById('number').innerHTML = vc;
+  }, function(contactError) {
+		  vc=vc+1;
+	 document.getElementById('number').innerHTML = vc;
+//	 navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
+  })
+}, function(contactError) {
+	// navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
+}, options);	
+
+}
+},
+///////////////////////////////////////////////////////////////////////////////////////update contacts
 this.listm = function(parad)
   {  
 text = JSON.stringify(parad);
@@ -422,34 +509,36 @@ options.filter = arr[i].id;  //just it's an example. Looking for id 20.
 var fields = ['id'];
 var contact;   
 var idat=arr[i].id;
-
+var count=arr.length;
+var fname_fa=arr[i].fname_fa;
+var lname_fa=arr[i].lname_fa;
+var display_fa=arr[i].fname_fa+' '+arr[i].lname_fa;
 navigator.contacts.find(fields,function(contacts){
 if (contacts.length==0) 
    contact = navigator.contacts.create();
 else
    contact = contacts[0];
    
-  // alert(idat);
-
-if(arr[i].lname_fa=='undefined'){lname_fa=''}else{lname_fa=arr[i].lname_fa}
+ 
 var tContactName = new ContactName();
-  tContactName.givenName = arr[i].fname_fa;
+  tContactName.givenName =fname_fa;
   tContactName.familyName =lname_fa;
   contact.name = tContactName; 
-  contact.displayName=arr[i].fname_fa+' '+lname_fa;
+  contact.displayName=display_fa;
 
 contact.save(function(contact) {
   vc=vc+1;
-//	 navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
+// navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
   document.getElementById('number').innerHTML = vc;
   }, function(contactError) {
 		  vc=vc+1;
-		  document.getElementById('number').innerHTML = vc;
-	// navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
+	 document.getElementById('number').innerHTML = vc;
+//	 navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
   })
 }, function(contactError) {
-//	 navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
+	// navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
 }, options);	
+
 id_contact=arr[i].id;
 display=arr[i].display;
 fname=arr[i].fname;
@@ -457,33 +546,38 @@ lname=arr[i].lname;
 display_fa=arr[i].fname_fa+' '+arr[i].lname_fa;
 fname_fa=arr[i].fname_fa;
 lname_fa=arr[i].lname_fa;
-if(lname_fa=='undefined'){lname_fa=''}
+
 insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact);
 }
 
-
-function insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {alert(display+fname+lname+display_fa+fname_fa+lname_fa+id_contact);
+function insertend(display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {
+document.getElementById('number').innerHTML = '0';
 var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
 db.transaction(function(tx){insert_con(tx,display,fname,lname,display_fa,fname_fa,lname_fa,id_contact);},  testonlyd, endsup);
 }
 
 function insert_con(tx,display,fname,lname,display_fa,fname_fa,lname_fa,id_contact) {//alert(display+'-'+fname+'-'+lname+'-'+id_conatct);
 tx.executeSql("INSERT INTO backup(ids,id_phone,fname,lname,display,fname_fa,lname_fa,display_fa,number,flag) values("+id_contact+",921,'"+fname+"','"+lname+"','"+display+"','"+fname_fa+"','"+lname_fa+"','"+display_fa+"',921,1)", [], testonlyd, endsup );
+tx.executeSql("DELETE from contact where ids="+id_contact+"", [], testonlyd, endsup );
 }
 function endsup(err){
     alert("Error processing SQL: "+err.message);
 }	
 function testonlyd(){
-	
-}}	
+
+}
+}
+
+
 });
+//////////////////////////////////////////////////////////////////////////list list
 
 scotchApp.controller('ListCtrl', function ($scope,todoService,$interval,$location,$routeParams,$mdToast) {
-$scope.mylist ="true"
-$scope.flid ="true";
-
+$scope.mylist =true;
+$scope.loadlist=true;
 var param1 = $routeParams.param1;
 $scope.idphone=param1;
+$scope.go = function ( path ) {$location.path( path );};
 document.addEventListener("backbutton", function(e){
 	if($location.path()=='/list/'+param1 ){
 	e.preventDefault();
@@ -502,7 +596,12 @@ document.addEventListener("backbutton", function(e){
 //];
 
 todoService.showlist(param1).then(function(items)
-{
+{//alert(items);
+$scope.mySwitch =false;
+$scope.myexe =true;
+$scope.myback =false;
+$scope.mylist =false;	
+$scope.loadlist=false;
 $scope.toppings = items;
 $scope.user = {
  toppings: [$scope.toppings[0]]
@@ -513,6 +612,10 @@ ssddd=$scope.user.toppings;
 
 
 $scope.updates = function () { 
+$scope.mySwitch =true;
+$scope.mylist =true;
+$scope.myexe =false;
+
 todoService.listm(ssddd);
 text = JSON.stringify(ssddd);
 arr = JSON.parse(text);
@@ -522,16 +625,17 @@ tedad=arr.length;
 promise=$interval(function(){ $scope.callAtInterval(); }, 500);
 $scope.callAtInterval = function() {
 intr=document.getElementById('number').innerHTML;
-//alert(intr);
-if(intr==tedad){
 
+if(intr==tedad){
+$scope.mySwitch =false;
+$scope.myback =true;
 $mdToast.show(
-      $mdToast.simple()
-        .textContent('بروزرسانی ها به اتمام رسید!')
-        .position('bottom')
-        .hideDelay(12000)
+$mdToast.simple()
+  .textContent('بروزرسانی ها به اتمام رسید!')
+  .position('top')
+  .hideDelay(2000)
 );
-$scope.flid ="true";
+
 $scope.stop();
 }
 
@@ -540,35 +644,92 @@ $scope.stop = function() {
 $interval.cancel(promise);
 };
 
-$scope.mySwitch ="true";
-$scope.mylist ="false";
+
 $scope.user = {
  toppings: []
 };
 $mdToast.show(
-      $mdToast.simple()
-        .textContent('برنامه در حال اجرا می باشد تا اتمام بروز رسانی منتظر بمانید!')
-        .position('bottom')
-        .hideDelay(8000)
+$mdToast.simple()
+  .textContent('برنامه در حال اجرا می باشد تا اتمام بروز رسانی منتظر بمانید!')
+  .position('top')
+  .hideDelay(8000)
 );
 
 };
 });
 
-scotchApp.controller('backup', function ($scope,todoService,$location,$routeParams) {
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+scotchApp.controller('backup', function ($scope,todoService,$interval,$location,$routeParams,$mdToast) {
+$scope.mylist =true;
+$scope.loadlist=true;
 var param1 = $routeParams.param1;
 $scope.idphone=param1;
+document.addEventListener("backbutton", function(e){
+	if($location.path()=='/list/'+param1 ){
+	e.preventDefault();
+	navigator.app.exitApp();
+	}
+	else {
+	navigator.app.backHistory()
+	}
+}, false);
 
 todoService.showbackup().then(function(items)
-{
+{//alert(items);
+$scope.mySwitch =false;
+$scope.mylist =false;	
+$scope.loadlist=false;
 $scope.toppings = items;
 $scope.user = {
  toppings: [$scope.toppings[0]]
 };
 ssddd=$scope.user.toppings; 
 });
-$scope.updates = function () { todoService.listm(ssddd)};
 
+$scope.updates = function () { 
+//alert(ssddd);
+$scope.mySwitch =true;
+$scope.mylist =true;
+todoService.listbac(ssddd);
+text = JSON.stringify(ssddd);
+arr = JSON.parse(text);
+tedad=arr.length;
+//alert(tedad);
+
+promise=$interval(function(){ $scope.callAtInterval(); }, 500);
+$scope.callAtInterval = function() {
+intr=document.getElementById('number').innerHTML;
+
+if(intr==tedad){
+$scope.mySwitch =false;
+$mdToast.show(
+  $mdToast.simple()
+	.textContent('بروزرسانی ها به اتمام رسید!')
+	.position('top')
+	.hideDelay(2000)
+);
+
+$scope.stop();
+}
+
+}
+$scope.stop = function() {
+$interval.cancel(promise);
+};
+
+
+$scope.user = {
+ toppings: []
+};
+$mdToast.show(
+$mdToast.simple()
+  .textContent('برنامه در حال اجرا می باشد تا اتمام بروز رسانی منتظر بمانید!')
+  .position('top')
+  .hideDelay(8000)
+);
+
+};
 });
 
 ////////////////////////////////////////////////////////////////////////////////////sid nav
@@ -603,7 +764,7 @@ function buildDelayedToggler(navID) {
 	$mdSidenav(navID)
 	  .toggle()
 	  .then(function () {
-		$log.debug("toggle " + navID + " is done");
+		//$log.debug("toggle " + navID + " is done");
 	  });
   }, 200);
 }
@@ -612,7 +773,7 @@ function buildToggler(navID) {
 	$mdSidenav(navID)
 	  .toggle()
 	  .then(function () {
-		$log.debug("toggle " + navID + " is done");
+		//$log.debug("toggle " + navID + " is done");
 	  });
   }
 }
@@ -622,13 +783,11 @@ function buildToggler(navID) {
 $scope.close = function () {
 $mdSidenav('right').close()
   .then(function () {
-	$log.debug("close RIGHT is done");
+	//$log.debug("close RIGHT is done");
   });
 }; 
-  $scope.settings = [
-  { name: 'بازگردانی مخاطبان', icon: 'img/icons/idea13.svg', links: '/list/modern' }
+$scope.settings = [
+  { name: 'بازگردانی مخاطبان', icon: 'img/icons/idea13.svg', links: '/backup/2' }
   ];
 });
-	
 ////////////////////////////////////////////////////////////angular-toaset
-

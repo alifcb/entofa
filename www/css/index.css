@@ -35,11 +35,16 @@ md-input-container label:not(.md-container-ignore) { right: 0 !important;
 	bottom:25px;
 	left:20px;
 }
+.md-button.md-fab.backup{
+	position:fixed;
+	bottom:25px;
+	left:20px;
+}
 .listy{
 	position:fixed;
 	bottom:5px;
 }
-#number{font-size:19px !important; padding: 0 5px 5px !important;}
+#number{font-size:21px !important; margin:-10px 0 0 !important; padding: 0 5px 5px !important;}
 .md-button.md-fab.execuf{
 	position:fixed;
 	bottom:25px;
