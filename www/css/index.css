@@ -44,7 +44,7 @@ md-input-container label:not(.md-container-ignore) { right: 0 !important;
 	position:fixed;
 	bottom:5px;
 }
-#number{font-size:21px !important; margin:-10px 0 0 !important; padding: 0 5px 5px !important;}
+#number{font-size:21px !important; margin:-8px 0 0 !important; padding: 0 5px 5px !important;}
 .md-button.md-fab.execuf{
 	position:fixed;
 	bottom:25px;
@@ -61,7 +61,7 @@ h3{ font-family:BYekan !important; padding-bottom:5px; }
 p{ font-family:BYekan !important; }
 md-list-item.md-2-line, md-list-item.md-2-line > .md-no-style{padding:0 !important;}
 md-list{padding:0 !important;}
-md-toolbar{z-index:100 !important; background-color:#044f55 !important;}
+md-toolbar{z-index:100 !important;  }
 .fixed{position:fixed !important;}
 md-sidenav, md-backdrop {position: fixed !important;}
 .marg-90{margin-top:90px !important; margin-bottom:0px !important;}

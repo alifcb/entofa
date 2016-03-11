@@ -38,7 +38,7 @@ db.transaction(table, errorCB, successCB);
 }
 
 function table(tx){
-tx.executeSql('DROP TABLE IF EXISTS backup');	
+//tx.executeSql('DROP TABLE IF EXISTS backup');	
 //tx.executeSql('DROP TABLE IF EXISTS contact');
 //tx.executeSql('DROP TABLE IF EXISTS setting');
 //tx.executeSql('CREATE TABLE IF NOT EXISTS contact(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ids INTEGER,id_phone INTEGER, fname text,lname text,display text,fname_fa text,lname_fa text,display_fa text,number text,flag INTEGER) ');

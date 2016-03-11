@@ -21,8 +21,9 @@
 </div>
 
 <section layout="row" layout-sm="column" class="marg-b50" layout-align="center center" layout-wrap>
-  <md-button id="render" style="display:block" class="md-raised">لطفا صبر کنید... </md-button>
+  <md-button id="render" style="display:block" class="md-raised">{{alertm}}</md-button>
   <md-button  id="endss" style="display:none" class="md-raised"  ng-click="go(listid)">برای نمایش لیست کلیک کنید</md-button>
+    <md-button  id="reload" style="display:none" class="md-raised"  ng-click="reloadin()">  <md-icon md-svg-src="img/icons/refresh62.svg"></md-icon> تلاش مجدد</md-button>
 </section>
 <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
 <p class="padding15 color-wihte marg-0 width100"><span>راهنما:</span> <br />

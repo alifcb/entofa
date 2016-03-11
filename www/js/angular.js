@@ -34,8 +34,12 @@ scotchApp.controller('onlineCtrl',  function($scope,$location,$routeParams)
 {
 document.addEventListener("online", onOnline, false);
 function onOnline() {
-$location.path('/');
+$location.path('execut/2');
 }
+document.addEventListener("backbutton", function(e){
+$location.path('execut/2');
+}, false);
+
 });
 //////////////////////////////////////////
 scotchApp.controller('startController', function($scope,todoService,$location,$routeParams) {
@@ -59,10 +63,7 @@ todoService.idphone().then(function(items)
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////main
 scotchApp.controller('mainController', function($scope,todoService,$location,$routeParams,$mdToast) {
-document.addEventListener("offline", onOffline, false);
-function onOffline() {
-$location.path('/online');
-}	
+
 $mdToast.show(
       $mdToast.simple()
         .textContent('برنامه در حال در یافتن اطلاعات لیست مخاطبین است لطفا چند لحظه صبر کنید!')
@@ -76,8 +77,16 @@ param1='all';
 todoService.start(param1);
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////execut
-scotchApp.controller('maincunter', function ($scope,todoService, $interval,$location,$routeParams) {
+scotchApp.controller('maincunter', function ($scope,todoService, $interval,$location,$route,$routeParams) {
 // az servise estefadeh shavad v dakhel if az yek function bray greftan etelat , update an
+
+$scope.reloadin = function () {$route.reload();};
+
+document.addEventListener("offline", onOffline, false);
+function onOffline() {
+$location.path('/online');
+}	
+$scope.alertm='لطفا صبر کنید... ';
 document.addEventListener("backbutton", function(e){
 if($location.path()=='/execut/2' ){
 	e.preventDefault();
@@ -101,29 +110,39 @@ todoService.endupdate().then(function(items)
 {
 
 $scope.ends = items;
-if($scope.ends<=10){M=120}else
-if($scope.ends>10 && $scope.ends<=50){M=($scope.ends)*11;}else
+if($scope.ends<=10){M=100}else
+if($scope.ends>10 && $scope.ends<=50){M=($scope.ends)*10;}else
 if($scope.ends>50 && $scope.ends<=100){M=600}else{M=700;}
-x=y=0.00;	
+x=y=err=0.00;	
 var promise;
+
 promise=$interval(function(){ $scope.callAtInterval(); }, M);
 
 $scope.callAtInterval = function() {
 
-x=x+0.01; y=y+1; 
+x=x+0.01; y=y+1; err=err+1; 
 if(y==65){update($scope.todos);}
-if(y>=100){y=100;
+if(y>=100){y=100;x=1;
+$scope.alertm='در حال آماده سازی اطلاعات...';
 todoService.flagup().then(function(items)
 {
-	var intor = items;
+var intor = items;
 if(intor==0){
 document.getElementById('render').style.display = 'none';
 document.getElementById('endss').style.display = 'block';
 $scope.stop();
+}else if(err<200){
+$scope.alertm='در حال آماده سازی اطلاعات...';
+}else{
+$scope.alertm='یک خطا رخ داده. اینترنت خود را بررسی کنید!! ';
+document.getElementById('reload').style.display = 'block';
+$scope.stop();	
 }
 });
 
 }
+
+
 $scope.size = 270;
 $scope.progress = x;
 $scope.darsad = y;
@@ -131,9 +150,11 @@ $scope.strokeWidth = 10;
 $scope.stroke = '#044f55';
 $scope.counterClockwise = '';
 }
+
 $scope.stop = function() {
 $interval.cancel(promise);
 };
+
 });
 
 var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
@@ -611,15 +632,25 @@ ssddd=$scope.user.toppings;
 
 
 
-$scope.updates = function () { 
+$scope.updates = function () {
+text = JSON.stringify(ssddd);
+arr = JSON.parse(text);
+tedad=arr.length; 
+
+if(tedad==0){
+$mdToast.show(
+  $mdToast.simple()
+	.textContent('لطفا یک مخاطب را انتخاب کنید!')
+	.position('top')
+	.hideDelay(3000)
+);
+}else{
 $scope.mySwitch =true;
 $scope.mylist =true;
 $scope.myexe =false;
 
 todoService.listm(ssddd);
-text = JSON.stringify(ssddd);
-arr = JSON.parse(text);
-tedad=arr.length;
+
 //alert(tedad);
 
 promise=$interval(function(){ $scope.callAtInterval(); }, 500);
@@ -656,6 +687,7 @@ $mdToast.simple()
 );
 
 };
+}
 });
 
 
@@ -666,7 +698,7 @@ $scope.loadlist=true;
 var param1 = $routeParams.param1;
 $scope.idphone=param1;
 document.addEventListener("backbutton", function(e){
-	if($location.path()=='/list/'+param1 ){
+	if($location.path()=='/backup/'+param1 ){
 	e.preventDefault();
 	navigator.app.exitApp();
 	}
@@ -689,13 +721,20 @@ ssddd=$scope.user.toppings;
 
 $scope.updates = function () { 
 //alert(ssddd);
-$scope.mySwitch =true;
-$scope.mylist =true;
-todoService.listbac(ssddd);
 text = JSON.stringify(ssddd);
 arr = JSON.parse(text);
 tedad=arr.length;
-//alert(tedad);
+if(tedad==0){
+$mdToast.show(
+  $mdToast.simple()
+	.textContent('لطفا یک مخاطب را انتخاب کنید!')
+	.position('top')
+	.hideDelay(3000)
+);
+}else{
+$scope.mySwitch =true;
+$scope.mylist =true;
+todoService.listbac(ssddd);
 
 promise=$interval(function(){ $scope.callAtInterval(); }, 500);
 $scope.callAtInterval = function() {
@@ -730,6 +769,7 @@ $mdToast.simple()
 );
 
 };
+}
 });
 
 ////////////////////////////////////////////////////////////////////////////////////sid nav
