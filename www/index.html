@@ -10,9 +10,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
           <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css"> 
-        <title>Hello World</title>
+        <title></title>
     </head>
-<body ng-app="StarterApp" ng-cloak>
+<body ng-app="StarterApp" ng-cloak  class="noselect">
+     <input  id="online" style="display:none" value="1" type="text">
 <div ng-controller="Sidnav" md-swipe-left="toggleRight()" ng-cloak>
 
 <md-sidenav   class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
@@ -43,16 +44,18 @@
 
 
 <div ng-controller="startController" >
-    <md-toolbar class="fixed">
+
+
+    <md-toolbar  class="md-hue-2 fixed" >
       <div class="md-toolbar-tools">
-        <md-button class="md-icon-button"   ng-click="go('/')" aria-label="Settings">
+        <md-button class="md-icon-button"  ng-click="go('/')" aria-label="Settings">
           <md-icon md-svg-icon="img/icons/icon.svg"></md-icon>
         </md-button>   
-        <md-button class="md-icon-button"    ng-click="go('backup/2')" >
+        <md-button class="md-icon-button"  ng-click="go('backup/2')" >
           <md-icon md-svg-icon="img/icons/data-storage-device.svg" ></md-icon>
         </md-button>
-        <span flex></span>
-        <h2>
+        <span flex  ></span>
+        <h2 >
           <span>مخاطب فارسی</span>
         </h2>
 
@@ -60,7 +63,7 @@
           <md-icon md-svg-icon="img/icons/list30.svg"></md-icon>
         </md-button>
       </div>
-    </md-toolbar>
+    </md-toolbar> 
 </div>
 
 <div ng-view  class="fade"></div>

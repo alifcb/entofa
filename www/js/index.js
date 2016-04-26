@@ -29,6 +29,16 @@ var app = {
 };
 
 //start
+
+document.addEventListener("offline", onOffline, false);
+document.addEventListener("online", onOnline, false);
+  function onOffline() {
+document.getElementById('online').value=0;
+}	
+  function onOnline() {
+document.getElementById('online').value=1;
+}	
+
 var id_phone = {}; // Globally scoped object
 document.addEventListener("deviceready", onDeviceReady, false);
 

@@ -4,7 +4,7 @@
  <div  ng-repeat="topping in toppings">
  <md-list-item >
       <img alt="{{ topping.display }}" ng-src="{{topping.img}}" class="md-avatar" />
-    <p>{{ topping.display }}</p> 
+    <p style="direction:ltr !important">{{ topping.display }}</p> 
 <!--        <input type="checkbox" checklist-model="user.toppings" checklist-value="topping"> 
 -->
 <md-checkbox  ng-hide="mylist" type="checkbox" class="md-secondary" checklist-model="user.toppings"   checklist-value="topping"></md-checkbox>

@@ -34,7 +34,8 @@ scotchApp.controller('onlineCtrl',  function($scope,$location,$routeParams)
 {
 document.addEventListener("online", onOnline, false);
 function onOnline() {
-$location.path('execut/2');
+$location.path('/');
+
 }
 document.addEventListener("backbutton", function(e){
 $location.path('execut/2');
@@ -62,7 +63,29 @@ todoService.idphone().then(function(items)
 });
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////main
-scotchApp.controller('mainController', function($scope,todoService,$location,$routeParams,$mdToast) {
+scotchApp.controller('mainController', function($scope,todoService,$location,$routeParams,$mdToast,$mdDialog) {
+	
+  $scope.goexe = function(ev) {
+    // Appending dialog to document.body to cover sidenav in docs app
+    var confirm = $mdDialog.confirm()
+          .title('انتخاب دسته مخاطبان')
+          .textContent('لطفا یکی از گزینه های زیر را انتخاب نمایید')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('تبدیل تمام مخاطبان')
+          .cancel('تبدیل مخاطبان دارای شماره');
+    $mdDialog.show(confirm).then(function() {
+		$location.path('execut/000');
+    }, function() {
+		$location.path('execut/0918');
+    });
+  };
+  
+online=document.getElementById('online').value;
+if(online==0){
+$location.path('/online');
+
+}	
 
 $mdToast.show(
       $mdToast.simple()
@@ -79,11 +102,14 @@ todoService.start(param1);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////execut
 scotchApp.controller('maincunter', function ($scope,todoService, $interval,$location,$route,$routeParams) {
 // az servise estefadeh shavad v dakhel if az yek function bray greftan etelat , update an
-
+var param1 = $routeParams.param1;
+if(param1=='0918'){
+	todoService.deleten();
+}
 $scope.reloadin = function () {$route.reload();};
+online=document.getElementById('online').value;
 
-document.addEventListener("offline", onOffline, false);
-function onOffline() {
+if(online==0){
 $location.path('/online');
 }	
 $scope.alertm='لطفا صبر کنید... ';
@@ -121,7 +147,29 @@ promise=$interval(function(){ $scope.callAtInterval(); }, M);
 $scope.callAtInterval = function() {
 
 x=x+0.01; y=y+1; err=err+1; 
-if(y==65){update($scope.todos);}
+if(y==20){
+online=document.getElementById('online').value;
+if(online==0){
+$location.path('/online');
+}
+}
+if(y==40){
+online=document.getElementById('online').value;
+if(online==0){
+$location.path('/online');
+}}
+if(y==97){
+online=document.getElementById('online').value;
+if(online==0){
+$location.path('/online');
+}}
+if(y==65){
+online=document.getElementById('online').value;
+if(online==0){
+$location.path('/online');
+}
+update($scope.todos);
+}
 if(y>=100){y=100;x=1;
 $scope.alertm='در حال آماده سازی اطلاعات...';
 todoService.flagup().then(function(items)
@@ -395,7 +443,7 @@ Array.prototype.contains = function ( needle ) {
 },	
 ////////////////////////////////////////////////////////////////////////	
 this.flagup = function()
-  {// alert('ss');
+  {
     var deferred, result = [];
         deferred = $q.defer();
 	  var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
@@ -410,9 +458,11 @@ deferred.resolve(result);
     },
 ////////////////////////////////////////////////////////////////////////	
 this.idphone = function()
-{   var deferred, result = [];
+{ 
+  var deferred, result = [];
 deferred = $q.defer();
 var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+
 db.transaction(function(tx) 
 { tx.executeSql("SELECT * FROM setting where title='id_phone'", [], function(tx, res) 
 { 
@@ -422,11 +472,24 @@ deferred.resolve(result);
 });
 return deferred.promise;
 },	
+this.deleten = function() 
+{
+var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+db.transaction(function(tx) 
+{
+	return tx.executeSql("DELETE  from contact where number=0918" , [], function(tx, res) 
+	{
+		return true;
+	});
+});
+return false;
+},
 ////////////////////////////////////////////////////////////////////////////////////
 this.endupdate = function()
-  {   var deferredx, result = [];
+  {  // alert(ss);
+  var deferredx, result = [];
         deferredx = $q.defer();
-	  var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
+	  var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);	  
 	  db.transaction(function(tx) 
 	  { tx.executeSql("SELECT count(*) AS xxx FROM contact where 1", [], function(tx, resu) 
 		  { 

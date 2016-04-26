@@ -5,8 +5,11 @@
        url('../fonts/wYekan.woff') format('woff'),  /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
        url('../fonts/wYekan.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
 }
-body{ font-family:BYekan;}
-
+body{ font-family:BYekan; }
+p{direction: rtl !important}
+.md-title {direction: rtl !important
+ 
+}
 md-list-item .md-avatar, md-list-item .md-list-item-inner .md-avatar{
 	height: 60px !important;
     width: 60px !important;
@@ -49,6 +52,16 @@ md-input-container label:not(.md-container-ignore) { right: 0 !important;
 	position:fixed;
 	bottom:25px;
 	right:20px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
 }
 md-list-item .md-no-style.md-button, md-list-item.md-no-proxy.md-button{text-align:right !important;}
 md-list-item md-icon{margin-left:10px !important; margin-right:0px !important;}
