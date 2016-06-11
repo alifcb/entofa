@@ -1,0 +1,58 @@
+<div ng-controller="ContentCtrl" ng-cloak>
+  <md-content class="md-padding padd-65" layout="row" layout-wrap layout-align="center start" >
+    <div flex="100" flex-sm="100" flex-xs="100" layout="column">
+      <md-card>
+ 
+        <md-card-content class="padding0" layout="row" layout-align="space-between">
+          <div class="md-media-lg card-media"><img ng-src="{{imagePath}}" class="md-card-image width100 height100" alt="Washed Out"></div>
+          <md-card-actions layout="column">
+            <md-button class="md-icon-button" aria-label="Favorite">
+              <md-icon md-svg-icon="img/icons/support.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Settings">
+              <md-icon md-svg-icon="img/icons/zoom71.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Share">
+              <md-icon md-svg-icon="img/icons/unlocked46.svg"></md-icon>
+            </md-button>
+          </md-card-actions>
+        </md-card-content>    
+           <md-card-title class="padding15">
+          <md-card-title-text>
+            <span class="md-headline">موستانگ سری اول</span>
+            <span class="md-subhead">شماره شاسی نزدیک درب راننده می باشد.</span>
+          </md-card-title-text>
+        </md-card-title>
+      </md-card>
+    </div>
+    
+<div flex="50" flex-sm="50" flex-xs="50" layout="column">    
+          <md-card>
+        <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+      </md-card>
+    <md-card>
+        <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+      </md-card>
+ </div>
+ <div flex="50" flex-sm="50" flex-xs="50" layout="column">      
+          <md-card>
+        <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+      </md-card>
+      <md-card>
+        <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+      </md-card>
+</div>
+  </md-content>
+</div>
+
+
+
+<div   ng-controller="AppCtrl2" class="md-padding" id="popupContainer" ng-cloak>
+
+    <md-button class="md-primary md-raised" ng-click="showAdvanced($event)" flex="100" flex-gt-md="auto">
+      Custom Dialog
+    </md-button>
+
+
+</div>
+
