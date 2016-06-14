@@ -1,0 +1,40 @@
+<md-list  ng-controller="backup" class="padd-65" ng-cloak>
+  <md-progress-linear class="md-warn" ng-show="loadlist"></md-progress-linear>
+
+ <div  ng-repeat="topping in toppings">
+ <md-list-item >
+      <img alt="{{ topping.display_fa }}" ng-src="{{topping.img}}" class="md-avatar" />
+    <p style="direction:ltr !important">{{ topping.display_fa }}</p> 
+<!--        <input type="checkbox" checklist-model="user.toppings" checklist-value="topping"> 
+-->
+<md-checkbox  ng-hide="mylist" type="checkbox" class="md-secondary" checklist-model="user.toppings"   checklist-value="topping"></md-checkbox>
+</md-list-item>
+ <md-list-item>
+<div flex>
+     <md-content  layout="row" layout-padding>
+      <md-input-container>
+      
+        <input   ng-model="topping.fname"  type="text">
+      </md-input-container>
+      <md-input-container>
+
+        <input  ng-model="topping.lname" type="text">
+      </md-input-container>
+      
+  </md-content>  
+</div>      
+
+<md-divider></md-divider>  
+  </md-list-item> 
+</div>
+
+<md-button aria-label="menu"   ng-hide="flid" ng-show="mySwitch" class="md-fab execuf "  >
+
+<p id="number">0</p>
+</md-button>
+
+<md-button  ng-disabled="mySwitch"aria-label="menu" class="md-fab listup md-warn "  ng-click="updates()">
+  <md-icon  class="md-primary" md-svg-src="img/icons/businessmen25.svg"></md-icon>
+</md-button>
+    <md-progress-linear  ng-show="mySwitch" class="listy md-warn "></md-progress-linear>
+</md-list >
