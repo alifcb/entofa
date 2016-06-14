@@ -1,0 +1,34 @@
+<div   class="gridListdemoBasicUsage padd-65" style=" background-color: #6CF"  ng-controller="endcunter" >
+<md-content class="main_b marg-t50" >
+
+
+<div  class="cuntd">
+  <progress-arc
+            size="{{ size }}"
+            stroke="{{ stroke }}"
+            stroke-width="{{ strokeWidth }}"
+            complete=" progress  "
+            background="{{ background }}"
+            counter-clockwise="{{ counterClockwise }}">
+</progress-arc>
+
+<md-button class="md-fab md-primary md-hue-2 maincunt"  aria-label="Profile">
+
+<p class="addm">{{ darsad }} %</p>
+
+        </md-button>
+     
+</div>
+
+<section layout="row" layout-sm="column" class="marg-b50" layout-align="center center" layout-wrap>
+  <md-button id="render" style="display:block" class="md-raised">لطفا صبر کنید... </md-button>
+  <md-button  id="endss" style="display:none" class="md-raised"  ng-click="go(listid)">برای نمایش لیست کلیک کنید</md-button>
+</section>
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+<p class="padding15 color-wihte marg-0 width100"><span>راهنما:</span> <br />
+ما در حال تبدیل مخاطبان شما هستیم. این کار ممکن است کمی طول بکشد، اما ارزش صبر کردن را دارد!</p>
+</section>
+
+</md-content>
+
+</div>
