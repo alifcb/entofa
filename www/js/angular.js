@@ -18,6 +18,10 @@ $routeProvider
 	templateUrl : 'pages/execut.html',
 })
 // route for the list page
+.when('/exeonline/:param1', {
+	templateUrl : 'pages/executonline.html',
+})
+// route for the list page
 .when('/list/:param1', {
 	templateUrl : 'pages/list.html',
 })
@@ -28,8 +32,36 @@ $routeProvider
 .when('/online', {
 	templateUrl : 'pages/online.html',
 })
+.when('/help1', {
+	templateUrl : 'pages/help1.html',
+})
+.when('/help2/:param1', {
+	templateUrl : 'pages/help2.html',
+})
 });
 
+
+////////////////////////////////////////////////////////onlineCtrl
+scotchApp.controller('help1',  function ($scope,todoService, $location,$route,$routeParams) 
+{
+todoService.idphone().then(function(items)
+{
+	$scope.todos = items;
+	$scope.listid = 'list/'+items;
+});
+$scope.go = function ( path ) {$location.path( path );};
+
+document.addEventListener("backbutton", function(e){
+	if($location.path()=='/' ){
+	e.preventDefault();
+	navigator.app.exitApp();
+	}
+	else {
+	navigator.app.backHistory()
+	}
+}, false);
+
+});
 ////////////////////////////////////////////////////////onlineCtrl
 scotchApp.controller('onlineCtrl',  function($scope,$location,$routeParams)
 {
@@ -39,13 +71,19 @@ $location.path('/');
 
 }
 document.addEventListener("backbutton", function(e){
-$location.path('execut/2');
+	if($location.path()=='/' ){
+	e.preventDefault();
+	navigator.app.exitApp();
+	}
+	else {
+	navigator.app.backHistory()
+	}
 }, false);
-
 });
 //////////////////////////////////////////
 scotchApp.controller('startController', function($scope,todoService,$location,$routeParams) {
 $scope.go = function ( path ) {$location.path( path );};
+
 
 document.addEventListener("backbutton", function(e){
 	if($location.path()=='/' ){
@@ -81,7 +119,21 @@ scotchApp.controller('mainController', function($scope,todoService,$location,$ro
 		$location.path('execut/0918');
     });
   };
-  
+    $scope.goonline = function(ev) {
+    // Appending dialog to document.body to cover sidenav in docs app
+    var confirm = $mdDialog.confirm()
+          .title('انتخاب دسته مخاطبان')
+          .textContent('لطفا یکی از گزینه های زیر را انتخاب نمایید')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('تبدیل تمام مخاطبان')
+          .cancel('تبدیل مخاطبان دارای شماره');
+    $mdDialog.show(confirm).then(function() {
+		$location.path('exeonline/000');
+    }, function() {
+		$location.path('exeonline/0918');
+    });
+  };
 online=document.getElementById('online').value;
 if(online==0){
 $location.path('/online');
@@ -122,7 +174,7 @@ $scope.alertm='لطفا صبر کنید... ';
  
 x=y=0.00;	
 var promise;
-promise=$interval(function(){ $scope.callAtInterval(); }, 120);
+promise=$interval(function(){ $scope.callAtInterval(); }, 100);
 
 $scope.callAtInterval = function() {
 
@@ -157,8 +209,8 @@ var param1 = $routeParams.param1;
 if(param1=='0918'){
 	todoService.deleten();
 }
-document.getElementById('render').style.display = 'none';
-document.getElementById('endss').style.display = 'block';
+//document.getElementById('render').style.display = 'none';
+//document.getElementById('endss').style.display = 'block';
 $scope.go = function ( path ) {$location.path( path );};
 
 $scope.reloadin = function () {$route.reload();};
@@ -467,6 +519,7 @@ insert(id,display,fname,lname,number);
 document.getElementById('loader').style.display = 'none';
 document.getElementById('demo').style.display = 'block';
 document.getElementById('starter').style.display = 'block';
+document.getElementById('starter2').style.display = 'block';
 document.getElementById("demo").innerHTML = y;
 
 }//for
@@ -476,6 +529,7 @@ function insert(id,display,fname,lname,number){//alert(display+'-'+fname+'-'+lna
 // dar in ghesmat tabdil anjam midahim	
 
 if(lname==undefined){lname=''}
+if(fname==undefined){fname=''}
 var db = window.openDatabase("Database", "1.0", "Cordova Namia", 200000);
 db.transaction(function(tx){insertco(tx,id,display,fname,lname,number);}, errorCB);
 
