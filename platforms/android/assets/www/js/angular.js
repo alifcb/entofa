@@ -68,7 +68,6 @@ scotchApp.controller('onlineCtrl',  function($scope,$location,$routeParams)
 document.addEventListener("online", onOnline, false);
 function onOnline() {
 $location.path('/');
-
 }
 document.addEventListener("backbutton", function(e){
 	if($location.path()=='/' ){
@@ -102,8 +101,11 @@ todoService.idphone().then(function(items)
 });
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////main
-scotchApp.controller('mainController', function($scope,todoService,$location,$routeParams,$mdToast,$mdDialog) {
-	
+scotchApp.controller('mainController', function($scope,todoService,$location,$routeParams,$mdToast,$mdDialog, $mdMedia) {
+
+
+
+
   $scope.goexe = function(ev) {
     // Appending dialog to document.body to cover sidenav in docs app
     var confirm = $mdDialog.confirm()
@@ -4132,15 +4134,15 @@ var tContactName = new ContactName();
 
 contact.save(function(contact) {
   vc=vc+1;
-// navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
+ navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
   document.getElementById('number').innerHTML = vc;
   }, function(contactError) {
 		  vc=vc+1;
 	 document.getElementById('number').innerHTML = vc;
-//	 navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
+	 navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
   })
 }, function(contactError) {
-	// navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
+	 navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
 }, options);	
 
 id_contact=arr[i].id;
@@ -4176,7 +4178,7 @@ function testonlyd(){
 });
 //////////////////////////////////////////////////////////////////////////list list
 
-scotchApp.controller('ListCtrl', function ($scope,todoService,$interval,$location,$routeParams,$mdToast) {
+scotchApp.controller('ListCtrl', function ($scope,todoService,$interval,$location,$routeParams,$mdToast,$mdMedia,$mdDialog) {
 $scope.mylist =true;
 $scope.loadlist=true;
 var param1 = $routeParams.param1;
@@ -4243,6 +4245,26 @@ intr=document.getElementById('number').innerHTML;
 if(intr==tedad){
 $scope.mySwitch =false;
 $scope.myback =true;
+ 
+    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+    $mdDialog.show({
+      controller: DialogController,
+      templateUrl: 'pages/share.tmpl.html',
+      parent: angular.element(document.body),
+      clickOutsideToClose:true,
+      fullscreen: useFullScreen
+    });
+ 
+
+function DialogController($scope, $mdDialog) {
+  $scope.hide = function() {
+    $mdDialog.hide();
+  };
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+}
+
 $mdToast.show(
 $mdToast.simple()
   .textContent('بروزرسانی ها به اتمام رسید!')
@@ -4275,7 +4297,7 @@ $mdToast.simple()
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-scotchApp.controller('backup', function ($scope,todoService,$interval,$location,$routeParams,$mdToast) {
+scotchApp.controller('backup', function ($scope,todoService,$interval,$location,$routeParams,$mdToast,$mdMedia,$mdDialog) {
 $scope.mylist =true;
 $scope.loadlist=true;
 var param1 = $routeParams.param1;
@@ -4324,6 +4346,24 @@ $scope.callAtInterval = function() {
 intr=document.getElementById('number').innerHTML;
 
 if(intr==tedad){
+
+    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+    $mdDialog.show({
+      controller: DialogController,
+      templateUrl: 'pages/share.tmpl.html',
+      parent: angular.element(document.body),
+      clickOutsideToClose:true,
+      fullscreen: useFullScreen
+    });
+
+function DialogController($scope, $mdDialog) {
+  $scope.hide = function() {
+    $mdDialog.hide();
+  };
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+}
 $scope.mySwitch =false;
 $mdToast.show(
   $mdToast.simple()
