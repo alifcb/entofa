@@ -4134,15 +4134,15 @@ var tContactName = new ContactName();
 
 contact.save(function(contact) {
   vc=vc+1;
- navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
+// navigator.notification.alert('Saved sucessfully!!!'+vc,function(){},'Title');
   document.getElementById('number').innerHTML = vc;
   }, function(contactError) {
 		  vc=vc+1;
 	 document.getElementById('number').innerHTML = vc;
-	 navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
+	// navigator.notification.alert('Error contact save: '+vc+contactError.code,function(){},'Title');
   })
 }, function(contactError) {
-	 navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
+	// navigator.notification.alert('Error contact find: '+contactError.code,function(){},'Title');
 }, options);	
 
 id_contact=arr[i].id;
